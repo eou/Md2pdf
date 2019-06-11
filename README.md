@@ -6,12 +6,13 @@
 
 ## Usage
 
-Please install [HPDF](https://hackage.haskell.org/package/HPDF-1.4.10) package to run this program. Try `cabal install HPDF` or other ways suggested in the doc.
+Please install [HPDF](https://hackage.haskell.org/package/HPDF-1.4.10) and [filemanip](https://hackage.haskell.org/package/filemanip) to run this program. Try `cabal install HPDF` and `cabal install filemanip`.
 
-Then run `runghc Main.hs fileName.md` in the directory. You can find `fileName.pdf` in this folder soon.
+Then You can run `runghc Main.hs ./Sample/Sample1.md ./Sample/Sample2.md` in the directory to convert several markdown files.
 
+You can also run `runghc Main.hs ./Sample` in the directory to convert all markdown files to PDF files in `Sample` subdirectory.
 
-The `README.pdf` in this project is an example converted from this readme file.
+All PDF files in this project are the outputs of this tool.
 
 ## Feature
 

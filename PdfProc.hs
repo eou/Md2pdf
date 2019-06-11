@@ -7,8 +7,6 @@
 {-# LANGUAGE ScopedTypeVariables, MultiParamTypeClasses #-}
 
 module PdfProc (
-    generateParagraph,
-    generatePage,
     generatePdfFile
 )
 where
@@ -79,13 +77,13 @@ instance ParagraphStyle MyVertStyles MyParaStyles where
     linePosition _ _ _ = 0.0
     interline _ = Nothing
     paragraphStyle CodePara = Just $ \(Rectangle (xa :+ ya) (xb :+ yb)) block -> do
-        let f = Rectangle ((xa-3) :+ (ya-3)) ((xb+10) :+ (yb+3))
+        let f = Rectangle ((xa-3) :+ (ya-3)) ((xb+3) :+ (yb+3))
         fillColor $ Rgb 0.74 0.83 0.9
         fill f
         block
         return ()
     paragraphStyle QuotePara = Just $ \(Rectangle (xa :+ ya) (xb :+ yb)) block -> do
-        let f = Rectangle ((xa-3) :+ (ya-3)) ((xb+10) :+ (yb+3))
+        let f = Rectangle ((xa-3) :+ (ya-3)) ((xb+3) :+ (yb+3))
         fillColor $ Rgb 0.96 0.96 0.86
         fill f
         block
@@ -165,6 +163,7 @@ generateQuote (Quote (Text str)) = do
     setStyle Itali 
     txt str
 
+
 generateParagraph :: Markdown Block -> [TM MyVertStyles MyParaStyles ()] -> Para MyParaStyles () -> [TM MyVertStyles MyParaStyles ()]
 generateParagraph (Markdown v) lst ctx
     | DV.length v == 0 = lst Prelude.++ [setParaStyle NormalPara >> paragraph ctx]
@@ -179,14 +178,15 @@ generateParagraph (Markdown v) lst ctx
         DotList b -> generateParagraph (Markdown (DV.tail v)) lst (ctx >> (generateDotList $ DV.head v))
         Quote b -> generateParagraph (Markdown (DV.tail v)) (lst Prelude.++ [setParaStyle NormalPara >> paragraph ctx] Prelude.++ [setParaStyle QuotePara >> paragraph (generateQuote $ DV.head v)]) (txt "")
 
- 
-
 generatePage :: Markdown Block -> PDFReference PDFPage -> PDF ()
 generatePage markdown page = do
     drawWithPage page $ do
-        displayFormattedText (Rectangle (15 :+ 0) (180 :+ 285)) NormalPara Normal paragraphs where
+        displayFormattedText (Rectangle (14 :+ 0) (208 :+ 305)) NormalPara Normal paragraphs where
             paragraphs = Prelude.foldl (>>) (paragraph $ txt "") (generateParagraph markdown [] (txt ""))
 
+{-
+    getOutputFileName: change "xxx.md" to "xxx.pdf"
+-}
 getOutputFileName :: String -> String
 getOutputFileName inputMdFileName = (Prelude.reverse $ Prelude.drop 3 $ Prelude.reverse inputMdFileName) Prelude.++ ".pdf"
 
@@ -194,7 +194,7 @@ generatePdfFile :: String -> Markdown Block -> IO ()
 generatePdfFile inputMdFileName markdown = do
     let pdfFileName = getOutputFileName inputMdFileName
     let documentInfo = standardDocInfo 
-    let defaultPageSize = PDFRect 0 0 210 300
+    let defaultPageSize = PDFRect 0 0 220 320
 
     runPdf pdfFileName documentInfo defaultPageSize $ do
         page <- addPage Nothing
