@@ -29,6 +29,5 @@ Since `HPDF` is an incomplete PDF package, this md2pdf tool can only convert som
 
 ## Contribution
 
->Author: Hangyi Wang
-
+>Author: Harry
 
